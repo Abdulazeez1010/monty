@@ -4,93 +4,78 @@
  */
 int main (int argc, char *argv[])
 {
-	int file_descriptor, in_word, line_number, value;
-	ssize_t bytes_read, i;
-	char buffer[100];
-	char current_line[124];
+	int found;
+	unsigned int line_number;
+	ssize_t i;
+	char line[256];
 	char *token;
-	ssize_t current_line_len = 0;
 	stack_t *stack;
+	FILE *file;
 	instruction_t instructions[] = 
 	{
 		{"push", push},
-		{"pall", pall}
+		{"pall", pall},
+		{NULL, NULL}
 	};
 
-	stack = NULL;
 	if (argc != 2)
 	{
-		perror("USAGE: monty file\n");
+		fprintf(stderr, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
 
-	file_descriptor = open(argv[1], O_RDONLY);
-	if (file_descriptor == -1)
+	file = fopen(argv[1], "r");
+	if (file == NULL)
 	{
-		perror("Error: Can't open file <file>\n");
+		fprintf(stderr, "Error: Can't open file <file>\n");
 		exit(EXIT_FAILURE);
 	}
 
-	in_word = 1;
-	while ((bytes_read = read(file_descriptor, buffer, sizeof(buffer))) > 0)
+	stack = NULL;
+	line_number = 0;
+	while (fgets(line, sizeof(line), file) != NULL)
 	{
-		line_number = 1;
-		for (i = 0; i < bytes_read; i++)
+		line_number++;
+		token = strtok(line, " \t\n");
+		if (token == NULL)
+			continue;
+		found = 0;
+		for (i = 0; instructions[i].opcode != NULL; i++)
 		{
-			if (buffer[i] == '\n')
+			if (strcmp(token, instructions[i].opcode) == 0)
 			{
-				current_line[current_line_len++] = '\0';
-				if (in_word)
-				{
-					token = strtok(current_line, " ");
-					if (token != NULL && strcmp(token, "push") == 0)
-					{
-						token = strtok(NULL, " ");
-						value = atoi(token);
-						if (token != NULL)
-						{
-							instructions[0].f(&stack, value);
-						}
-						else
-						{
-							fprintf(stderr, "L%d: usage: push integer\n", line_number);
-						}
-					}
-					else if (token != NULL && strcmp(token, "pall") == 0)
-						instructions[1].f(&stack, value);
-					else
-					{
-
-						fprintf(stderr, "L%d: unknown instruction %s\n", line_number, current_line);
-						close(file_descriptor);
-						exit(EXIT_FAILURE);
-					}
-				}
-				current_line_len = 0;
-				line_number++;
-				in_word = 0;
-			}
-			else
-			{
-				current_line[current_line_len++] = buffer[i];
-				if (buffer[i] != ' ' && buffer[i] != '\t')
-					in_word = 1;
+				instructions[i].f(&stack, line_number);
+				found = 1;
+				break;
 			}
 		}
-	}
-	if (bytes_read == -1)
-	{
-		exit(EXIT_FAILURE);
+		if (!found)
+		{
+			fprintf(stderr, "L%d: unknown instruction %s\n", line_number, token);
+			fclose(file);
+			exit(EXIT_FAILURE);
+		}
 	}
 
-	close(file_descriptor);
-	return (0);
+	fclose(file);
+	return (EXIT_SUCCESS);
 }
 
 
 void push(stack_t **stack, unsigned int line_number)
 {
 	stack_t *new_node;
+	char *token;
+	int value;
+
+	token = strtok(NULL, " ");
+	if (token == NULL)
+	{
+		fprintf(stderr, "L%d: usage: push integer\n", line_number);
+		exit(EXIT_FAILURE);
+	}
+
+	value = atoi(token);
 
 	new_node = malloc(sizeof(stack_t));
 	if (new_node == NULL)
@@ -98,11 +83,14 @@ void push(stack_t **stack, unsigned int line_number)
 		fprintf(stderr, "Error: malloc failed\n");
 		exit(EXIT_FAILURE);
 	}
-	new_node -> n = line_number;
+	new_node -> n = value;
 	new_node -> prev = NULL;
-	new_node -> next = *stack;
+	new_node -> next = NULL;
 	if (*stack != NULL)
+	{
+		new_node -> next = *stack;
 		(*stack) -> prev = new_node;
+	}
 	*stack = new_node;
 }
 
@@ -112,7 +100,6 @@ void pall(stack_t **stack, unsigned int line_number)
 	(void) line_number;
 
 	current = *stack;
-
 	while (current != NULL)
 	{
 		printf("%d\n", current -> n);
