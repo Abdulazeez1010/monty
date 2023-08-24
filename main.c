@@ -1,8 +1,12 @@
 #include "monty.h"
 
 /**
+ * main - The main function
+ * @argc : Argument count
+ * @argv : Argument vector
+ * Return: if successfule EXIT_SUCCESS, otherwise, EXIT_FAILURE
  */
-int main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 	int found;
 	unsigned int line_number;
@@ -11,8 +15,7 @@ int main (int argc, char *argv[])
 	char *token;
 	stack_t *stack;
 	FILE *file;
-	instruction_t instructions[] = 
-	{
+	instruction_t instructions[] = {
 		{"push", push},
 		{"pall", pall},
 		{NULL, NULL}
@@ -59,52 +62,4 @@ int main (int argc, char *argv[])
 
 	fclose(file);
 	return (EXIT_SUCCESS);
-}
-
-
-void push(stack_t **stack, unsigned int line_number)
-{
-	stack_t *new_node;
-	char *token;
-	int value;
-
-	token = strtok(NULL, " ");
-	if (token == NULL)
-	{
-		fprintf(stderr, "L%d: usage: push integer\n", line_number);
-		exit(EXIT_FAILURE);
-	}
-
-	value = atoi(token);
-
-	new_node = malloc(sizeof(stack_t));
-	if (new_node == NULL)
-	{
-		fprintf(stderr, "Error: malloc failed\n");
-		exit(EXIT_FAILURE);
-	}
-	new_node -> n = value;
-	new_node -> prev = NULL;
-	new_node -> next = NULL;
-	if (*stack != NULL)
-	{
-		new_node -> next = *stack;
-		(*stack) -> prev = new_node;
-	}
-	*stack = new_node;
-}
-
-void pall(stack_t **stack, unsigned int line_number)
-{
-	stack_t *current, *temp;
-	(void) line_number;
-
-	current = *stack;
-	while (current != NULL)
-	{
-		printf("%d\n", current -> n);
-		temp = current;
-		current = current -> next;
-		free(temp);
-	}
 }
