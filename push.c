@@ -1,6 +1,9 @@
 #include "monty.h"
 
 /**
+ * push - The opcode push pushes an element to the stack
+ * @stack : The stack
+ * @line_number : Current line number
  */
 void push(stack_t **stack, unsigned int line_number)
 {
@@ -11,7 +14,7 @@ void push(stack_t **stack, unsigned int line_number)
 	token = strtok(NULL, " ");
 	if (token == NULL)
 	{
-		fprintf(stderr, "L%d: usage: push integer\n", line_number);
+		fprintf(stderr, "L%u: usage: push integer\n", line_number);
 		exit(EXIT_FAILURE);
 	}
 
@@ -23,13 +26,13 @@ void push(stack_t **stack, unsigned int line_number)
 		fprintf(stderr, "Error: malloc failed\n");
 		exit(EXIT_FAILURE);
 	}
-	new_node -> n = value;
-	new_node -> prev = NULL;
-	new_node -> next = NULL;
+	new_node->n = value;
+	new_node->prev = NULL;
+	new_node->next = NULL;
 	if (*stack != NULL)
 	{
-		new_node -> next = *stack;
-		(*stack) -> prev = new_node;
+		new_node->next = *stack;
+		(*stack)->prev = new_node;
 	}
 	*stack = new_node;
 }
