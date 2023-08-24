@@ -49,7 +49,7 @@ int main (int argc, char *argv[])
 						value = atoi(token);
 						if (token != NULL)
 						{
-							instructions[0].f(&stack, line_number, value);
+							instructions[0].f(&stack, value);
 						}
 						else
 						{
@@ -57,7 +57,7 @@ int main (int argc, char *argv[])
 						}
 					}
 					else if (token != NULL && strcmp(token, "pall") == 0)
-						instructions[1].f(&stack, line_number, value);
+						instructions[1].f(&stack, value);
 					else
 					{
 
@@ -88,7 +88,7 @@ int main (int argc, char *argv[])
 }
 
 
-void push(stack_t **stack, unsigned int line_number, int value)
+void push(stack_t **stack, unsigned int line_number)
 {
 	stack_t *new_node;
 
@@ -98,20 +98,18 @@ void push(stack_t **stack, unsigned int line_number, int value)
 		fprintf(stderr, "Error: malloc failed\n");
 		exit(EXIT_FAILURE);
 	}
-	new_node -> n = value;
+	new_node -> n = line_number;
 	new_node -> prev = NULL;
 	new_node -> next = *stack;
 	if (*stack != NULL)
 		(*stack) -> prev = new_node;
 	*stack = new_node;
-
-	line_number++;
 }
 
-void pall(stack_t **stack, unsigned int line_number, int value)
+void pall(stack_t **stack, unsigned int line_number)
 {
 	stack_t *current;
-	(void) value;
+	(void) line_number;
 
 	current = *stack;
 
@@ -120,6 +118,4 @@ void pall(stack_t **stack, unsigned int line_number, int value)
 		printf("%d\n", current -> n);
 		current = current -> next;
 	}
-
-	line_number++;
 }
