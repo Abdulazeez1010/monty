@@ -11,6 +11,8 @@ void pall(stack_t **stack, unsigned int line_number)
 	stack_t *current, *temp;
 	(void) line_number;
 
+	if (*stack == NULL)
+		return;
 	current = *stack;
 	while (current != NULL)
 	{
@@ -25,4 +27,5 @@ void pall(stack_t **stack, unsigned int line_number)
 		current = current->next;
 		free(temp);
 	}
+	*stack = NULL;
 }
