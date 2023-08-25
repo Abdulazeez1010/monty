@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
 		{"divide", divide},
 		{"multiply", multiply},
 		{"mod", mod},
+		{"pchar", pchar},
 		{NULL, NULL}
 	};
 
@@ -48,7 +49,7 @@ int main(int argc, char *argv[])
 	while (fgets(line, sizeof(line), file) != NULL)
 	{
 		line_number++;
-		if (line[0] == "#")
+		if (line[0] == '#')
 			continue;
 		token = strtok(line, " \t\n");
 		if (token == NULL)
