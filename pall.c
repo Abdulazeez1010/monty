@@ -8,7 +8,7 @@
  */
 void pall(stack_t **stack, unsigned int line_number)
 {
-	stack_t *current;
+	stack_t *current, *temp;
 	(void) line_number;
 
 	if (*stack == NULL)
@@ -20,11 +20,11 @@ void pall(stack_t **stack, unsigned int line_number)
 		current = current->next;
 	}
 
-	/*current = *stack;
+	current = *stack;
 	while (current != NULL)
 	{
 		temp = current;
 		current = current->next;
 		free(temp);
-	}*/
+	}
 }
