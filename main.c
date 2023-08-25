@@ -4,7 +4,7 @@
  * main - The main function
  * @argc : Argument count
  * @argv : Argument vector
- * Return: if successfule EXIT_SUCCESS, otherwise, EXIT_FAILURE
+ * Return: if successful EXIT_SUCCESS, otherwise, EXIT_FAILURE
  */
 int main(int argc, char *argv[])
 {
