@@ -1,5 +1,10 @@
 #include "monty.h"
 
+/**
+ * add - The opcode add adds the top two elements of the stack.
+ * @stack : The stack
+ * @line_number : Cureent line number
+ */
 void add(stack_t **stack, unsigned int line_number)
 {
 	stack_t *top, *second;
@@ -11,7 +16,8 @@ void add(stack_t **stack, unsigned int line_number)
 
 	top = *stack;
 	second = top->next;
-	second->n = second->n + top->n;
+	second->n += top->n;
 	second->prev = NULL;
 	*stack = second;
+	free(top);
 }
