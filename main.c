@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
 		{"swap", swap},
 		{"add", add},
 		{"nop", nop},
+		{"sub", sub},
 		{NULL, NULL}
 	};
 
