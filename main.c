@@ -48,6 +48,8 @@ int main(int argc, char *argv[])
 	while (fgets(line, sizeof(line), file) != NULL)
 	{
 		line_number++;
+		if (line[0] == "#")
+			continue;
 		token = strtok(line, " \t\n");
 		if (token == NULL)
 			continue;
