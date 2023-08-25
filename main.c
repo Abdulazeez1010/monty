@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
 		{"sub", sub},
 		{"divide", divide},
 		{"multiply", multiply},
+		{"mod", mod},
 		{NULL, NULL}
 	};
 
